@@ -32,4 +32,4 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "Auto Update: News for $(date -d '+8 hours' +'%Y-%m-%d')"
-          branch: gh-pages
+          branch: main
