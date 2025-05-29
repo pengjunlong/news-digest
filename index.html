@@ -1,0 +1,47 @@
+---
+layout: default
+pagination:
+enabled: true
+collection: posts
+sort_field: date
+sort_reverse: true
+---
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ site.title }}</title>
+    <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+<header>
+    <h1>{{ site.title }}</h1>
+</header>
+
+<div class="post-list">
+    {% for post in paginator.posts %}
+    <article class="post-item">
+        <h2><a href="{{ post.url | relative_url }}">{{ post.title }}</a></h2>
+        <time datetime="{{ post.date | date_to_xmlschema }}">
+            {{ post.date | date: "%Y年%m月%d日" }}
+        </time>
+        <div class="excerpt">{{ post.excerpt | strip_html | truncate: 150 }}</div>
+    </article>
+    {% endfor %}
+</div>
+
+<!-- 分页导航 -->
+<div class="pagination">
+    {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path }}" class="previous">上一页</a>
+    {% endif %}
+
+    <span class="page-number">
+      第 {{ paginator.page }} 页 / 共 {{ paginator.total_pages }} 页
+    </span>
+
+    {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path }}" class="next">下一页</a>
+    {% endif %}
+</div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+/* 文章列表样式 */
+.post-list {
+  margin: 2rem 0;
+}
+
+.post-item {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.post-item h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.5rem;
+}
+
+.post-item time {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.excerpt {
+  color: #444;
+  margin-top: 0.5rem;
+}
+
+/* 分页导航样式 */
+.pagination {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.pagination a, .page-number {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  margin: 0 0.2rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.pagination a:hover {
+  background: #f8f9fa;
+}
