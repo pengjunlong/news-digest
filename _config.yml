@@ -2,29 +2,21 @@ title: 每日新闻摘要
 baseurl: "/news-digest"
 url: "https://pengjunlong.github.io"
 
-# 方案一：使用本地主题
+remote_theme: pages-themes/hacker@v0.2.0  # 官方维护版本
 plugins:
-  - jekyll-theme-minima
-  - jekyll-paginate
-  - jekyll-sitemap
-
-paginate: 10
-paginate_path: "/news/page:num/"
+  - jekyll-remote-theme
+  - jekyll-seo-tag
 
 defaults:
   - scope:
       path: ""
-      type: posts
     values:
-      layout: post
-      comments: false
+      layout: default
+      show_downloads: false  # 隐藏下载按钮
 
-collections:
-  posts:
-    output: true
-    permalink: /:year/:month/:title/
+exclude:
+  - Gemfile
+  - Gemfile.lock
 
-sass:
-  style: compressed
-
-timezone: Asia/Shanghai
+theme_settings:
+  repository: ""  # 隐藏GitHub仓库链接
