@@ -37,11 +37,17 @@ jobs:
           bundler-cache: true
 
       # 步骤5：安装Jekyll依赖
-      - name: Bundle Install
+      - name: Clean Install
         run: |
-          gem install bundler
-          bundle config path vendor/bundle
-          bundle _2.4.12_ install # 指定Bundler版本
+          gem update --system
+          gem cleanup
+          bundle install --clean --force
+
+      - name: Verify Versions
+        run: |
+          bundle show jekyll
+          bundle show jekyll-theme-minima
+
 
       # 步骤6：构建Jekyll站点
       - name: Build Site

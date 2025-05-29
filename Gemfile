@@ -3,7 +3,7 @@ source "https://rubygems.org"
 gem "jekyll", "~> 4.3.0"
 
 # 使用支持Jekyll 4的Minima主题版本
-gem "jekyll-theme-minima", "~> 2.5.1"
+gem "jekyll-theme-minima", ">= 2.5.1"
 
 # 可选：添加其他必要依赖
 gem "webrick"
