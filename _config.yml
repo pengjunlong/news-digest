@@ -2,8 +2,10 @@ title: 每日新闻摘要
 baseurl: "/news-digest"
 url: "https://pengjunlong.github.io"
 
-theme: minima
+# 方案二：使用远程主题（推荐）
+remote_theme: jekyll/minima
 plugins:
+  - jekyll-remote-theme
   - jekyll-paginate
   - jekyll-sitemap
 
