@@ -1,0 +1,25 @@
+title: 每日新闻摘要
+baseurl: "/news-digest"
+url: "https://pengjunlong.github.io"
+
+theme: minima
+plugins:
+  - jekyll-feed
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      comments: false
+
+collections:
+  news:
+    output: true
+    permalink: /news/:year/:month/:title/
+
+sass:
+  style: compressed
+
+timezone: Asia/Shanghai

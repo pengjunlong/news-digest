@@ -1,0 +1,35 @@
+name: Daily News Crawler
+
+on:
+  schedule:
+    - cron: '0 13,23 * * *'  # 北京时间21:00和7:00
+  workflow_dispatch:
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Asia/Shanghai
+      PYTHONUNBUFFERED: 1
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 python-dateutil
+
+      - name: Run crawler
+        run: python scripts/news_crawler.py
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Auto Update: News for $(date -d '+8 hours' +'%Y-%m-%d')"
+          branch: gh-pages
