@@ -45,7 +45,7 @@ jobs:
 
       # 步骤6：构建Jekyll站点
       - name: Build Site
-        run: bundle exec jekyll build --trace
+        run: bundle exec jekyll build --trace --verbose
 
       # 步骤7：部署到GitHub Pages
       - name: Deploy

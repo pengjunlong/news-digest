@@ -1,4 +1,5 @@
 source "https://rubygems.org"
-gem "jekyll"
+gem "jekyll", "~> 4.3"
 gem "webrick"
-gem "jekyll-feed"
+gem "jekyll-paginate"
+gem "jekyll-sitemap"
