@@ -14,6 +14,8 @@ defaults:
       layout: post
       comments: false
 
+# 配置文章永久链接
+permalink: /news/:year/:month/:title/
 collections:
   news:
     output: true
