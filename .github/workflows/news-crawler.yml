@@ -1,4 +1,4 @@
-name: Daily News Crawler
+name: Jekyll Site Builder
 
 on:
   schedule:
@@ -6,30 +6,61 @@ on:
   workflow_dispatch:
 
 jobs:
-  crawl:
+  build-and-deploy:
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Shanghai
-      PYTHONUNBUFFERED: 1
+      JEKYLL_ENV: production
 
     steps:
-      - name: Checkout code
+      # 步骤1：检出代码
+      - name: Checkout
         uses: actions/checkout@v4
 
+      # 步骤2：设置Python环境（用于新闻抓取）
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      # 步骤3：运行新闻抓取脚本
+      - name: Run News Crawler
         run: |
           pip install requests beautifulsoup4 python-dateutil
+          python scripts/news_crawler.py
 
-      - name: Run crawler
-        run: python scripts/news_crawler.py
-
-      - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+      # 步骤4：设置Ruby环境
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
         with:
-          commit_message: "Auto Update: News for $(date -d '+8 hours' +'%Y-%m-%d')"
-          branch: main
+          ruby-version: '3.1'
+          bundler-cache: true
+
+      # 步骤5：安装Jekyll依赖
+      - name: Bundle Install
+        run: |
+          gem install bundler
+          bundle config path vendor/bundle
+          bundle install
+
+      # 步骤6：构建Jekyll站点
+      - name: Build Site
+        run: bundle exec jekyll build --trace
+
+      # 步骤7：部署到GitHub Pages
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
+          keep_files: false
+          force_orphan: true
+
+      # 步骤8：提交新闻源文件
+      - name: Commit News Posts
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add _posts/
+          git commit -m "Auto Update: News posts" || echo "No changes to commit"
+          git push origin main
