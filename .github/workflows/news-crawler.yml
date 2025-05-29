@@ -41,7 +41,7 @@ jobs:
         run: |
           gem install bundler
           bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          bundle _2.4.12_ install # 指定Bundler版本
 
       # 步骤6：构建Jekyll站点
       - name: Build Site
