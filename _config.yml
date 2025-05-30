@@ -14,8 +14,18 @@ defaults:
     values:
       layout: default
       show_downloads: false  # 隐藏下载按钮
+  - scope:
+      path: "subsite-config.json"
+      values:
+        content_type: "application/json"
+
+include:
+  - _data        # 包含数据目录
+  - subsite-config.json # 包含模板文件
 
 exclude:
+  - node_modules
+  - vendor
   - Gemfile
   - Gemfile.lock
 

@@ -3,7 +3,10 @@ name: Jekyll Site Builder
 on:
   schedule:
     - cron: '0 13,23 * * *'  # 北京时间21:00和7:00
-  workflow_dispatch:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
 
 jobs:
   build-and-deploy:

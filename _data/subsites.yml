@@ -1,0 +1,8 @@
+# _data/subsites.yml
+news_digest:
+  displayName: "新闻聚合"
+  url: "/news-digest"
+  icon: "📰"
+  description: "暂时只有每日新闻联播简介"
+  version: 1.0
+  last_updated: "2025-05-31"
