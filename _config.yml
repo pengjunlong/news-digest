@@ -16,8 +16,10 @@ defaults:
       show_downloads: false  # 隐藏下载按钮
   - scope:
       path: "subsite-config.json"
-      values:
-        content_type: "application/json"
+    values:
+      layout: null
+      content_type: "application/json"
+      permalink: /subsite-config.json
 
 include:
   - _data        # 包含数据目录
