@@ -47,14 +47,18 @@ jobs:
       id-token: write
 
     steps:
+      - name: Checkout with artifacts
+        uses: actions/checkout@v4
+        with:
+          ref: main  # 确保获取最新提交的构建结果
+
       - name: Configure Pages
         uses: actions/configure-pages@v3
 
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v2  # 使用正确的官方Action
         with:
-          path: /  # 必须匹配仓库Pages设置中的发布目录
+          path: /  # 必须与仓库Settings中的发布目录一致
 
-      - name: Deploy
-        id: deployment
+      - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v2
