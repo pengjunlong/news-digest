@@ -4,16 +4,14 @@ on:
   schedule:
     - cron: '0 13,23 * * *'  # 北京时间21:00和7:00
   push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Shanghai
-      JEKYLL_ENV: production
 
     steps:
       # 步骤1：检出代码
@@ -32,37 +30,7 @@ jobs:
           pip install requests beautifulsoup4 python-dateutil
           python scripts/news_crawler.py
 
-      # 步骤4：设置Ruby环境
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.1'
-          bundler-cache: true
-
-      - name: Install Dependencies
-        run: |
-          bundle config path vendor/bundle
-          bundle install --jobs 4 --retry 3 --clean
-
-      - name: Verify Versions
-        run: |
-          bundle show jekyll
-
-
-      # 步骤6：构建Jekyll站点
-      - name: Build Site
-        run: bundle exec jekyll build --trace --verbose
-
-      # 步骤7：部署到GitHub Pages
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
-          keep_files: false
-          force_orphan: true
-
-      # 步骤8：提交新闻源文件
+      # 步骤4：提交新闻源文件
       - name: Commit News Posts
         run: |
           git config --global user.name "GitHub Actions"
@@ -70,3 +38,23 @@ jobs:
           git add _posts/
           git commit -m "Auto Update: News posts" || echo "No changes to commit"
           git push origin main
+
+  github-pages:
+    needs: custom-build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: /  # 必须匹配仓库Pages设置中的发布目录
+
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v2
