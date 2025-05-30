@@ -1,14 +1,16 @@
 # scripts/news_crawler.py
+import logging
 import os
+import random
 import re
+import time
+from dataclasses import dataclass
+from datetime import datetime, timedelta
+from typing import List
+from zoneinfo import ZoneInfo
 
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
-import time
-import random
-import logging
 
 # 配置日志
 logging.basicConfig(
@@ -33,6 +35,13 @@ HEADERS = {
     'sec-ch-ua-mobile': '?0',
     'sec-ch-ua-platform': '"macOS"'
 }
+
+
+@dataclass
+class NewsItem:
+    index: str
+    title: str
+    subitems: List[str]
 
 
 class NewsCrawler:
@@ -146,57 +155,58 @@ class NewsCrawler:
             self.logger.error(f"解析失败: {str(e)}")
             raise
 
-    def format_news_content(self, text):
-        # 预处理分割
-        lines = text.strip().split('\n')
-        formatted = []
-        current_level = 0
-        last_main_num = 0
-        timestamp = None
+
+    def parse_news_content(self, text: str) -> List[NewsItem]:
+        pattern = re.compile(
+            r"(?P<index>\d+\.|（\d+）)\s*"  # 匹配数字编号或括号编号
+            r"(?P<title>【.*?】.*?|[^（]+)"  # 匹配标题
+            r"(?P<subitems>(?:\s*（\d+）.*?)*)"  # 匹配子条目
+        )
+
+        items = []
+        lines = [line.strip() for line in text.split('\n') if line.strip()]
+
+        current_item = None
 
         for line in lines:
-            # 提取时间戳
-            if line.startswith('（《新闻联播》'):
-                timestamp = line.strip('（）')
-                continue
+            if match := re.match(r"^(\d+\.)\s*(.*)", line):
+                if current_item:
+                    items.append(current_item)
+                current_item = NewsItem(
+                    index=match.group(1),
+                    title=match.group(2),
+                    subitems=[]
+                )
+            elif match := re.match(r"^\s*（(\d+)）(.*)", line):
+                if current_item:
+                    current_item.subitems.append(match.group(2))
+            elif current_item:
+                if current_item.subitems:
+                    current_item.subitems[-1] += " " + line
+                else:
+                    current_item.title += " " + line
 
-            # 处理主条目
-            main_match = re.match(r'(\d+)\.\s*(.*)', line)
-            if main_match:
-                num = int(main_match.group(1))
-                content = main_match.group(2)
+        if current_item:
+            items.append(current_item)
 
-                # 保持层级连续性
-                if num != last_main_num + 1 and last_main_num != 0:
-                    formatted.append('\n---\n')  # 添加分隔线
+        return items
 
-                formatted.append(f"## {num}. {content}\n")
-                last_main_num = num
-                current_level = 1
-                continue
+    def generate_html(self, items: List[NewsItem]) -> str:
+        html = ['<div class="news-container">']
 
-            # 处理带括号子条目
-            sub_match = re.match(r'（(\d+)）(.*)', line)
-            if sub_match:
-                sub_num = sub_match.group(1)
-                content = sub_match.group(2).strip('；')
-                indent = '    ' * current_level
-                formatted.append(f"{indent}- [{sub_num}] {content}\n")
-                continue
+        for item in items:
+            html.append(f'''
+            <section class="news-section">
+                <h2 class="news-index">{item.index}</h2>
+                <div class="news-content">
+                    <h3 class="news-title">{item.title}</h3>
+                    {''.join([f'<p class="news-subitem">{sub}</p>' for sub in item.subitems])}
+                </div>
+            </section>
+            ''')
 
-            # 处理特殊标题
-            if '【' in line and '】' in line:
-                formatted.append(f"\n### {line.strip('；')}\n")
-                continue
-
-            # 处理普通内容
-            formatted.append(f"> {line}\n")
-
-        # 添加时间戳
-        if timestamp:
-            formatted.append(f"\n---\n*{timestamp}*")
-
-        return ''.join(formatted)
+        html.append('</div>')
+        return '\n'.join(html)
 
     def generate_markdown(self, content, file_date):
         """带BOM头的UTF-8写入"""
@@ -213,8 +223,7 @@ categories: daily-news
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             # 使用UTF-8 with BOM 解决Windows兼容问题
             with open(filename, 'w', encoding='utf-8') as f:  # 注意编码改为utf-8-sig
-                news_content = self.format_news_content(content)
-                f.write(front_matter + news_content)
+                f.write(front_matter + self.generate_html(self.parse_news_content(content)))
                 f.flush()
             self.logger.info(f"成功生成文件：{filename}")
         except IOError as e:

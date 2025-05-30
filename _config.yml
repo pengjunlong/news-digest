@@ -14,12 +14,6 @@ defaults:
     values:
       layout: default
       show_downloads: false  # 隐藏下载按钮
-  - scope:
-      path: "subsite-config.json"
-    values:
-      layout: null
-      content_type: "application/json"
-      permalink: /subsite-config.json
 
 include:
   - _data        # 包含数据目录
@@ -35,7 +29,7 @@ theme_settings:
   repository: ""  # 隐藏GitHub仓库链接
 
 # 启用分页
-paginate: 5  # 每页显示5篇文章
+paginate: 6  # 每页显示6篇文章
 paginate_path: "/page:num/"  # 分页路径格式
 collections:
   posts:
