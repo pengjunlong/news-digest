@@ -8,11 +8,21 @@ plugins:
   - jekyll-seo-tag
   - jekyll-paginate-v2
 
-defaults:
-  - scope:
-      path: ""
-    values:
-      show_downloads: false  # 隐藏下载按钮
+pagination:
+  enabled: true
+  per_page: 5
+  permalink: "/page/:num/"
+  sort_field: "date"
+  sort_reverse: true
+
+# 禁用下载按钮
+show_downloads: false
+
+# 自定义集合
+collections:
+  posts:
+    output: true
+    permalink: /:year/:month/:title/
 
 include:
   - _data        # 包含数据目录
@@ -27,12 +37,3 @@ exclude:
 theme_settings:
   repository: ""  # 隐藏GitHub仓库链接
 
-# 启用分页
-pagination:
-  enabled: true
-  per_page: 6
-  permalink: '/page/:num/'
-  title: ':title - 第 :num 页'
-  limit: 0
-  sort_field: 'date'
-  sort_reverse: true

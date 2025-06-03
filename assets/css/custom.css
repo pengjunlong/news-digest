@@ -1,0 +1,98 @@
+
+/* 核心隐藏配置 */
+header .btn,
+.ribbon,
+.github-corner,
+[data-component="downloads"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* 分页样式 */
+.pagination {
+    margin: 2rem 0;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.pagination a.prev,
+.pagination a.next {
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.pagination a:hover {
+    background-color: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.page-info {
+    align-self: center;
+    color: #6c757d;
+}
+
+/* 文章列表布局 */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+article {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+article h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+}
+
+article time {
+    display: block;
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .pagination {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    article {
+        padding: 1rem;
+    }
+}
+
+/* 链接样式覆盖 */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* 清除GitHub Pages默认样式 */
+.page-header {
+    padding: 1rem 0 !important;
+    background: none !important;
+    border-bottom: none !important;
+}
+
+.main-content {
+    max-width: 100% !important;
+    padding: 0 !important;
+}
