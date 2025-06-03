@@ -1,4 +1,4 @@
-name: Jekyll Site Builder
+name: news_crawler
 
 on:
   schedule:
@@ -38,27 +38,3 @@ jobs:
           git add _posts/
           git commit -m "Auto Update: News posts" || echo "No changes to commit"
           git push origin main
-
-  github-pages:
-    needs: custom-build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-
-    steps:
-      - name: Checkout with artifacts
-        uses: actions/checkout@v4
-        with:
-          ref: main  # 确保获取最新提交的构建结果
-
-      - name: Configure Pages
-        uses: actions/configure-pages@v3
-
-      - name: Upload Pages Artifact
-        uses: actions/upload-pages-artifact@v2  # 使用正确的官方Action
-        with:
-          path: /  # 必须与仓库Settings中的发布目录一致
-
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
