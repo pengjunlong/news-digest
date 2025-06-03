@@ -11,6 +11,7 @@ plugins:
 pagination:
   enabled: true
   per_page: 5
+  collection: 'posts'  # 与集合名称一致
   permalink: "/page/:num/"
   sort_field: "date"
   sort_reverse: true
@@ -22,7 +23,7 @@ show_downloads: false
 collections:
   posts:
     output: true
-    permalink: /:year/:month/:title/
+    permalink: /:year/:month/:day/:title/
 
 include:
   - _data        # 包含数据目录
