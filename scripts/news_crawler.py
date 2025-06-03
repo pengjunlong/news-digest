@@ -51,16 +51,16 @@ class NewsCrawler:
         self.tz = ZoneInfo("Asia/Shanghai")
         self.logger = logging.getLogger(__name__)
 
-    def _get_target_date(self):
+    def _get_target_date(self, delta_days):
         """智能判断抓取日期"""
         now = datetime.now(self.tz)
         if now.hour < 19:
-            return now.date() - timedelta(days=1)
+            return now.date() - timedelta(days=delta_days)
         return now.date()
 
-    def _generate_urls(self):
+    def _generate_urls(self, delta_days):
         """生成目标URL和日期字符串"""
-        target_date = self._get_target_date()
+        target_date = self._get_target_date(delta_days)
         return (
             f"https://tv.cctv.com/lm/xwlb/day/{target_date.strftime('%Y%m%d')}.shtml",
             target_date.strftime("%Y-%m-%d")
@@ -231,23 +231,21 @@ categories: daily-news
         except IOError as e:
             raise IOError(f"文件写入失败: {str(e)}")
 
-    def run(self):
+    def run(self, param_days=1):
         """主执行流程"""
         try:
-            list_url, file_date = self._generate_urls()
-            self.logger.info(f"开始处理 {file_date} 的新闻")
-
-            # 获取并解析列表页
-            list_html = self.fetch_page(list_url)
-            detail_url = self.parse_main_page(list_html)
-            self.logger.debug(f"解析到详情页地址: {detail_url}")
-
-            # 获取并解析详情页
-            detail_html = self.fetch_page(detail_url)
-            content = self.parse_detail_page(detail_html)
-
-            # 生成Markdown
-            self.generate_markdown(content, file_date)
+            for i in range(1, param_days):
+                list_url, file_date = self._generate_urls(i)
+                self.logger.info(f"开始处理 {file_date} 的新闻")
+                # 获取并解析列表页
+                list_html = self.fetch_page(list_url)
+                detail_url = self.parse_main_page(list_html)
+                self.logger.debug(f"解析到详情页地址: {detail_url}")
+                # 获取并解析详情页
+                detail_html = self.fetch_page(detail_url)
+                content = self.parse_detail_page(detail_html)
+                # 生成Markdown
+                self.generate_markdown(content, file_date)
             return True
 
         except Exception as e:
@@ -257,5 +255,5 @@ categories: daily-news
 
 if __name__ == "__main__":
     crawler = NewsCrawler()
-    success = crawler.run()
+    success = crawler.run(10)
     exit(0 if success else 1)
