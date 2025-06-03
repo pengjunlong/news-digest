@@ -6,13 +6,12 @@ remote_theme: pages-themes/hacker@v0.2.0  # 官方维护版本
 plugins:
   - jekyll-remote-theme
   - jekyll-seo-tag
-  - jekyll-paginate  # 必须显式声明
+  - jekyll-paginate-v2
 
 defaults:
   - scope:
       path: ""
     values:
-      layout: default
       show_downloads: false  # 隐藏下载按钮
 
 include:
@@ -29,9 +28,11 @@ theme_settings:
   repository: ""  # 隐藏GitHub仓库链接
 
 # 启用分页
-paginate: 6  # 每页显示6篇文章
-paginate_path: "/page:num/"  # 分页路径格式
-collections:
-  posts:
-    output: true
-    permalink: /news/:year/:month/:title/
+pagination:
+  enabled: true
+  per_page: 6
+  permalink: '/page/:num/'
+  title: ':title - 第 :num 页'
+  limit: 0
+  sort_field: 'date'
+  sort_reverse: true
