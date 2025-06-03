@@ -223,7 +223,9 @@ categories: daily-news
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             # 使用UTF-8 with BOM 解决Windows兼容问题
             with open(filename, 'w', encoding='utf-8') as f:  # 注意编码改为utf-8-sig
-                f.write(front_matter + self.generate_html(self.parse_news_content(content)))
+                html_content = self.generate_html(self.parse_news_content(content))
+                final_content = front_matter + "\n{% raw %}\n" + html_content + "\n{% endraw %}"
+                f.write(final_content)
                 f.flush()
             self.logger.info(f"成功生成文件：{filename}")
         except IOError as e:
