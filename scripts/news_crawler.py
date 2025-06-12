@@ -191,40 +191,39 @@ class NewsCrawler:
 
         return items
 
-    def generate_html(self, items: List[NewsItem]) -> str:
-        html = ['<div class="news-container">']
+
+    def generate_markdown_content(self, items: List[NewsItem]) -> str:
+        md_content = [f'## 每日要闻综述', f'全球局势持续变化，以下是今日重点新闻摘要...']
 
         for item in items:
-            html.append(f'''
-            <section class="news-section">
-                <h2 class="news-index">{item.index}</h2>
-                <div class="news-content">
-                    <h3 class="news-title">{item.title}</h3>
-                    {''.join([f'<p class="news-subitem">{sub}</p>' for sub in item.subitems])}
-                </div>
-            </section>
-            ''')
+            md_content.append(f'''### {item.index} {item.title} ''')
+            md_content.append('{: .notice--primary .pt-2 .pb-3}')
+            for sub in item.subitems:
+                md_content.append(f'''- {sub}''')
+            md_content.append('{: .notice .mt-1 .mb-2}')
+        return '\n\n'.join(md_content)
 
-        html.append('</div>')
-        return '\n'.join(html)
 
     def generate_markdown(self, content, file_date):
         """带BOM头的UTF-8写入"""
         filename = f"_posts/{file_date}-news.md"
         front_matter = f"""---
-layout: post
+layout: single  # 使用主题的标准单页布局
+classes: wide    # 启用宽屏模式
 title: "{file_date} 新闻联播摘要"
 date: {file_date} 19:00:00 +0800
 categories: daily-news
 ---
-    
-    """
+
+{{% include toc icon="file-text" title="新闻目录" %}}
+   
+"""
         try:
             os.makedirs(os.path.dirname(filename), exist_ok=True)
             # 使用UTF-8 with BOM 解决Windows兼容问题
             with open(filename, 'w', encoding='utf-8') as f:  # 注意编码改为utf-8-sig
-                html_content = self.generate_html(self.parse_news_content(content))
-                final_content = front_matter + "\n{% raw %}\n" + html_content + "\n{% endraw %}"
+                html_content = self.generate_markdown_content(self.parse_news_content(content))
+                final_content = front_matter + html_content
                 f.write(final_content)
                 f.flush()
             self.logger.info(f"成功生成文件：{filename}")
