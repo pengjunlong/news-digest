@@ -254,5 +254,5 @@ categories: daily-news
 
 if __name__ == "__main__":
     crawler = NewsCrawler()
-    success = crawler.run(10)
+    success = crawler.run(16)
     exit(0 if success else 1)
