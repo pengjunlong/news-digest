@@ -70,32 +70,17 @@ plugins:
 author:
   name   : "Junlong Peng"
   avatar : "https://avatars.githubusercontent.com/u/1436509?v=4"
-  bio    : "My awesome biography constrained to a sentence or two goes here."
+  bio    : "News is what people want to know...what they didn't know they wanted to know until they hear about it."
   links:
-    - label: "Website"
-      icon: "fas fa-fw fa-link"
-      url: "https://"
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+      url: "https://pengjunlong.github.io/"
 
 footer:
   links:
-    - label: "Twitter"
-      icon: "fab fa-fw fa-twitter-square"
-      url: "https://twitter.com/"
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
-      url: "https://github.com/"
-    - label: "Instagram"
-      icon: "fab fa-fw fa-instagram"
-      url: "https://instagram.com/"
+      url: "https://pengjunlong.github.io/"
 
 defaults:
   # _posts
