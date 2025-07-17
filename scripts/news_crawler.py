@@ -208,7 +208,7 @@ class NewsCrawler:
         """带BOM头的UTF-8写入"""
         filename = f"_posts/{file_date}-news.md"
         front_matter = f"""---
-layout: single  # 使用主题的标准单页布局
+layout: single-with-ga  # 使用主题的标准单页布局
 classes: wide    # 启用宽屏模式
 title: "{file_date} 新闻联播摘要"
 date: {file_date} 19:00:00 +0800
