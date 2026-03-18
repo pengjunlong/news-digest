@@ -1,0 +1,9 @@
+# Jekyll生成文件
+_site/
+.sass-cache/
+.jekyll-cache/
+vendor/
+
+# Python生成文件
+__pycache__/
+*.py[cod]
