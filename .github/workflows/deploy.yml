@@ -2,37 +2,35 @@ name: news_crawler
 
 on:
   schedule:
-    - cron: '0 13,23 * * *'  # 北京时间21:00和7:00
+    # 北京时间 21:00 和 7:00 (UTC 13:00 / 23:00)
+    - cron: '0 13,23 * * *'
   workflow_dispatch:
 
 jobs:
-  custom-build:
+  crawl-and-commit:
     runs-on: ubuntu-latest
     env:
       TZ: Asia/Shanghai
 
     steps:
-      # 步骤1：检出代码
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 步骤2：设置Python环境（用于新闻抓取）
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
 
-      # 步骤3：运行新闻抓取脚本
+      - name: Install dependencies
+        run: pip install aiohttp beautifulsoup4 lxml
+
       - name: Run News Crawler
-        run: |
-          pip install requests beautifulsoup4 python-dateutil
-          python scripts/news_crawler.py
+        run: python scripts/news_crawler.py 2
 
-      # 步骤4：提交新闻源文件
-      - name: Commit News Posts
+      - name: Commit & Push
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
           git add _posts/
-          git commit -m "Auto Update: News posts" || echo "No changes to commit"
-          git push origin main
+          git diff --cached --quiet || git commit -m "Auto Update: News posts $(date +%Y-%m-%d)"
+          git push
