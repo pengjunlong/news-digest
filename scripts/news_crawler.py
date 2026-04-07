@@ -97,8 +97,9 @@ def file_date_str(date: datetime) -> str:
 def parse_main_page(html: str) -> str:
     """从列表页 HTML 中提取第一条新闻详情页链接。"""
     soup = BeautifulSoup(html, "lxml")
-    # 策略 1: 最常见的链接模式
-    link = soup.find("a", href=lambda h: h and "/2025/" in h and h.endswith(".shtml"))
+    # 策略 1: 匹配 /YYYY/ 路径下的 .shtml 链接
+    year_pattern = re.compile(r"/\d{4}/.*\.shtml$")
+    link = soup.find("a", href=lambda h: h and year_pattern.search(h))
     if link and link.get("href"):
         return link["href"]
     # 策略 2: 通过 CSS class
