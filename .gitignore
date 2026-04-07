@@ -1,9 +1,32 @@
-# Jekyll生成文件
+# Jekyll
 _site/
 .sass-cache/
 .jekyll-cache/
+.jekyll-metadata
 vendor/
 
-# Python生成文件
+# Ruby
+*.gem
+Gemfile.lock
+
+# Python
 __pycache__/
 *.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# CatPaw
+.catpaw/
